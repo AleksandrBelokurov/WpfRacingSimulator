@@ -57,12 +57,12 @@ namespace WpfRacingSimulator
                 pb_LengthyTaskProgress.Value = i;
                 lbl_CountDownTimer.Text = i.ToString();
                 lbl_TaskStatus.Text = "Done";
-                gd_Main.RowDefinitions.Add(new RowDefinition());
-                System.Windows.Controls.TextBlock newTxtbl = new TextBlock();
-                newTxtbl.Text = "New Text Block";
-                gd_Main.Children.Add(newTxtbl);
-                Grid.SetRow(newTxtbl, gd_Main.RowDefinitions.Count - 1);
-                Grid.SetColumn(newTxtbl, 2);
+                //gd_Main.RowDefinitions.Add(new RowDefinition());
+                //System.Windows.Controls.TextBlock newTxtbl = new TextBlock();
+                //newTxtbl.Text = "New Text Block";
+                //gd_Main.Children.Add(newTxtbl);
+                //Grid.SetRow(newTxtbl, gd_Main.RowDefinitions.Count - 1);
+                //Grid.SetColumn(newTxtbl, 2);
                 btn_StartLengthyTask.IsEnabled = true;
                 btn_OpenConfigFile.IsEnabled = true;
             });

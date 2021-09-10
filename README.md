@@ -2,7 +2,7 @@
 #### Implemented a racing simulator on vechles in C#
 --------------------------------------------------------------
 Build
-- Open the MS Visual Studio.
+- Open the MS Visual Studio 2022.
 - Open ./src/WpfRacingSimulator/WpfRacingSimulator.sln
 - Build solution
 --------------------
