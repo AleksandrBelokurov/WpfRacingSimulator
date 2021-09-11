@@ -6,7 +6,21 @@ using System.Threading.Tasks;
 
 namespace WpfRacingSimulator
 {
-    abstract class Vechle
+    struct Info 
+    {
+        string Speed;
+        string Odometr;
+        string DamageRandom;
+        string AddInfo;
+    }
+    interface IVechle 
+    {
+        public void Startup();
+        public void Shutdown();
+        public void Run();
+        public Info GetInfo();
+    }
+    abstract class Vechle : IVechle
     {
         int speed_;
         public int Speed
@@ -20,15 +34,15 @@ namespace WpfRacingSimulator
                 }
             }
         }
-        double damageRand_;
+        double damageRandom_;
         public double DamageRand
         {
-            get => damageRand_;
+            get => damageRandom_;
             set
             {
                 if ((value > 0) && (value < 1))
                 {
-                    damageRand_ = value;
+                    damageRandom_ = value;
                 }
             }
         }
@@ -46,6 +60,18 @@ namespace WpfRacingSimulator
         }
         int damageCount_;
         int damageCountInit_ = 5;
+        public void Startup() 
+        {
+
+        }
+        public void Shutdown() 
+        {
+        
+        }
+        public Info GetInfo() 
+        {
+            return new Info();
+        }
         public void Run() 
         {
             Distance -= speed_;
@@ -56,7 +82,7 @@ namespace WpfRacingSimulator
             if (damageCount_ > 0)
             {
                 --damageCount_;
-            } else if (rand.NextDouble() < damageRand_)
+            } else if (rand.NextDouble() < damageRandom_)
             {
                 damageCount_ = damageCountInit_;
             }

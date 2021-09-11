@@ -5,35 +5,35 @@
         xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
         xmlns:local="clr-namespace:WpfRacingSimulator"
         mc:Ignorable="d"
-        Title="MainWindow" Height="450" Width="800">
-    <ScrollViewer VerticalScrollBarVisibility="Visible">
-    <Grid Margin="5" x:Name="gd_Main">
-        <Grid.ColumnDefinitions>
-            <ColumnDefinition Width="110"/>
-            <ColumnDefinition Width="110"/>
-            <ColumnDefinition Width="*"/>
-        </Grid.ColumnDefinitions>
-        <Grid.RowDefinitions>
-            <RowDefinition Height="35"></RowDefinition>
-            <RowDefinition Height="35"></RowDefinition>
-            <RowDefinition Height="35"></RowDefinition>
-            <RowDefinition Height="*"></RowDefinition>
-            <RowDefinition Height="35"></RowDefinition>
-        </Grid.RowDefinitions>
-        <Grid Height="35" Grid.Column="0" Grid.Row="0" Grid.ColumnSpan="2">
-            <Button x:Name="btn_OpenConfigFile" Click="btn_OpenConfigFile_Click" Width="128" Height="20" VerticalAlignment="Center">Open Config File</Button>
+        Title="MainWindow" Height="320" Width="800" MinHeight="128" MinWidth="256">
+    <ScrollViewer VerticalScrollBarVisibility="Auto" HorizontalScrollBarVisibility="Auto">
+        <Grid Margin="5" x:Name="gd_Main">
+            <Grid.ColumnDefinitions>
+                <ColumnDefinition Width="110"/>
+                <ColumnDefinition Width="110"/>
+                <ColumnDefinition Width="*"/>
+            </Grid.ColumnDefinitions>
+            <Grid.RowDefinitions>
+                <RowDefinition Height="35"></RowDefinition>
+                <RowDefinition Height="35"></RowDefinition>
+                <RowDefinition Height="*"></RowDefinition>
+                <RowDefinition Height="35"></RowDefinition>
+            </Grid.RowDefinitions>
+            <Grid Height="35" Grid.Column="0" Grid.Row="0" Grid.ColumnSpan="2">
+                <Button x:Name="btn_OpenConfig" Click="btn_OpenConfigFile_Click" Width="96" Height="20" VerticalAlignment="Center">Open Config</Button>
+            </Grid>
+            <Grid Height="35" Grid.Column="0" Grid.Row="1" Grid.ColumnSpan="3">
+                <Button x:Name="btn_Start" Click="btn_StartLengthyTask_Click" Width="64" Height="20" VerticalAlignment="Center">Start</Button>
+            </Grid>
+            
+            <Grid Height="35" Grid.Column="0" Grid.Row="3" Grid.ColumnSpan="3">
+                <ScrollViewer VerticalScrollBarVisibility="Auto" HorizontalScrollBarVisibility="Auto">
+                    <TextBlock x:Name="lbl_InfoTable" HorizontalAlignment="Center" VerticalAlignment="Center">Result</TextBlock>
+                </ScrollViewer>
+            </Grid>
+            <TextBlock Grid.Column="0" Grid.Row="3" x:Name="lbl_Status" HorizontalAlignment="Center" VerticalAlignment="Center">Status...</TextBlock>
+            <TextBlock Grid.Column="1" Grid.Row="3" x:Name="lbl_Timer" HorizontalAlignment="Center" VerticalAlignment="Center">0</TextBlock>
+            <ProgressBar Grid.Column="2" Grid.Row="4" x:Name="pb_TotalProgress" Margin="10,10"  Value="0" ></ProgressBar>
         </Grid>
-        <Grid Height="35" Grid.Column="0" Grid.Row="1" Grid.ColumnSpan="3">
-            <Button x:Name="btn_StartLengthyTask" Click="btn_StartLengthyTask_Click" Width="128" Height="20" VerticalAlignment="Center">Start Lengthy Task</Button>
-        </Grid>
-        <TextBlock Grid.Column="0" Grid.Row="2" x:Name="lbl_TaskStatus" HorizontalAlignment="Center" VerticalAlignment="Center">Status...</TextBlock>
-        <TextBlock Grid.Column="1" Grid.Row="2" x:Name="lbl_CountDownTimer" HorizontalAlignment="Center" VerticalAlignment="Center">0</TextBlock>
-        <Grid Height="35" Grid.Column="0" Grid.Row="3" Grid.ColumnSpan="3">
-            <TextBlock x:Name="lbl_Race" HorizontalAlignment="Center" VerticalAlignment="Center">Result</TextBlock>
-        </Grid>
-        <Grid Height="35" Grid.Column="0" Grid.Row="4" Grid.ColumnSpan="3">
-            <ProgressBar x:Name="pb_LengthyTaskProgress" Margin="10,10"  Value="0" ></ProgressBar>
-        </Grid>
-    </Grid>
     </ScrollViewer>
 </Window>

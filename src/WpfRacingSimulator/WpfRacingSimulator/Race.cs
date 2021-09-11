@@ -10,7 +10,7 @@ namespace WpfRacingSimulator
 {
     class Race
     {
-        private static System.Timers.Timer aTimer_;
+        private System.Timers.Timer aTimer_;
         List<Vechle> vechles;
         public Race()
         {
@@ -27,7 +27,7 @@ namespace WpfRacingSimulator
                 , new Moto() { Speed = 120, DamageRand = 0.1, IsSidecar = false }
             };
         }
-        private static void OnTimedEvent(Object source, ElapsedEventArgs e)
+        private void OnTimedEvent(Object source, ElapsedEventArgs e)
         {
             Console.WriteLine("The Elapsed event was raised at {0:HH:mm:ss.fff}",
                               e.SignalTime);

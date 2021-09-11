@@ -42,11 +42,11 @@ namespace WpfRacingSimulator
         {
             get
             {
-                return this.lbl_TaskStatus.Text;
+                return this.lbl_Status.Text;
             }
             set
             {
-                this.lbl_TaskStatus.Text = value;
+                this.lbl_Status.Text = value;
             }
         }
         public void Win()
@@ -54,44 +54,44 @@ namespace WpfRacingSimulator
             this.Dispatcher.Invoke(() =>
             {
                 int i = Distance;
-                pb_LengthyTaskProgress.Value = i;
-                lbl_CountDownTimer.Text = i.ToString();
-                lbl_TaskStatus.Text = "Done";
+                pb_TotalProgress.Value = i;
+                lbl_Timer.Text = i.ToString();
+                lbl_Status.Text = "Done";
                 //gd_Main.RowDefinitions.Add(new RowDefinition());
                 //System.Windows.Controls.TextBlock newTxtbl = new TextBlock();
                 //newTxtbl.Text = "New Text Block";
                 //gd_Main.Children.Add(newTxtbl);
                 //Grid.SetRow(newTxtbl, gd_Main.RowDefinitions.Count - 1);
                 //Grid.SetColumn(newTxtbl, 2);
-                btn_StartLengthyTask.IsEnabled = true;
-                btn_OpenConfigFile.IsEnabled = true;
+                btn_Start.IsEnabled = true;
+                btn_OpenConfig.IsEnabled = true;
             });
         }
         private void btn_StartLengthyTask_Click(object sender, RoutedEventArgs e)
         {
-            btn_StartLengthyTask.IsEnabled = false;
-            btn_OpenConfigFile.IsEnabled = false;
-            pb_LengthyTaskProgress.Value = 0;
+            btn_Start.IsEnabled = false;
+            btn_OpenConfig.IsEnabled = false;
+            pb_TotalProgress.Value = 0;
 
             Task.Run(() =>
             {
                 this.Dispatcher.Invoke(() => //Use Dispather to Update UI Immediately  
                 {
-                    lbl_TaskStatus.Text = "Starting long Task...";
-                    lbl_CountDownTimer.Text = "0";
+                    lbl_Status.Text = "Starting long Task...";
+                    lbl_Timer.Text = "0";
                 });
                 Thread.Sleep(1000);
                 this.Dispatcher.Invoke(() =>
                 {
-                    lbl_TaskStatus.Text = "In Progress...";
+                    lbl_Status.Text = "In Progress...";
                 });
                 for (int i = 0; i < Distance; i++)
                 {
                     Thread.Sleep(50);
                     this.Dispatcher.Invoke(() =>
                     {
-                        pb_LengthyTaskProgress.Value = i / Scale;
-                        lbl_CountDownTimer.Text = i.ToString();
+                        pb_TotalProgress.Value = i / Scale;
+                        lbl_Timer.Text = i.ToString();
                     });
                 }
                 Display();
