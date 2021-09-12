@@ -10,9 +10,10 @@ namespace WpfRacingSimulator
     class Race
     {
         private System.Timers.Timer aTimer_;
-        List<Vechle> vechles;
+        int timeout_ = 100;
+        List<Vechle> vechles_;
         MainWindow mainPage_;
-        private int distance_ = 2000;
+        private int distance_;
         private int droveDistance_;
         List<int> odometrs_;
         private StringBuilder score_;
@@ -20,20 +21,11 @@ namespace WpfRacingSimulator
         public Race(MainWindow mainPage)
         {
             mainPage_ = mainPage;
-            aTimer_ = new System.Timers.Timer(100); 
+            aTimer_ = new System.Timers.Timer(timeout_);
             aTimer_.Elapsed += OnTimedEvent;
             odometrs_ = new List<int>();
             score_ = new StringBuilder("");
-
-            vechles = new List<Vechle> 
-            { 
-                new Truck() { VehicleType = "Truck", Speed = 50, DamageRandom = 0.1, Weight = 1000 },
-                new Moto() { VehicleType = "Moto", Speed = 110, DamageRandom = 0.03, IsSidecar = true },
-                new Car() { VehicleType = "Car", Speed = 90, DamageRandom = 0.05, Passengers = 2 },
-                new Moto() { VehicleType = "Moto", Speed = 120, DamageRandom = 0.03, IsSidecar = false },
-                new Car() { VehicleType = "Car", Speed = 90, DamageRandom = 0.05, Passengers = 1 },
-                new Truck() { VehicleType = "Truck", Speed = 40, DamageRandom = 0.1, Weight = 2500 }
-            };
+            vechles_ = new List<Vechle>();
         }
         public void Start()
         {
@@ -41,7 +33,7 @@ namespace WpfRacingSimulator
             place_ = 0;
             score_.Clear();
             SetProgressMaximum(mainPage_, distance_);
-            foreach (var vechle in vechles)
+            foreach (var vechle in vechles_)
             {
                 vechle.Startup();
             }
@@ -51,24 +43,24 @@ namespace WpfRacingSimulator
         {
             odometrs_.Clear();
             StringBuilder sb = new StringBuilder("");
-            foreach (var vechle in vechles)
+            foreach (var vechle in vechles_)
             {
                 vechle.Run();
             }
-            foreach (var vechle in vechles)
+            foreach (var vechle in vechles_)
             {
                 VechleInfo info = vechle.GetInfo();
                 odometrs_.Add(info.Odometr);
                 sb.Append(info.VehicleType);
                 sb.Append("\tSpeed: " + info.Speed.ToString());
-                sb.Append("\tWheel puncture probability: " + info.DamageRandom.ToString());
+                sb.Append("\tWheel: " + info.DamageRandom.ToString());
                 sb.Append("\t" + info.AdditionalInfo);
                 int distance = info.Odometr;
                 if (distance > distance_) 
                 {
                     distance = distance_;
                 }
-                sb.Append("\tOdometer reading: " + distance.ToString());
+                sb.Append("\tOdometer: " + distance.ToString());
                 sb.Append("\t" + info.IsDamaged);
                 sb.Append("\n");
                 if (info.Odometr >= distance_) 
@@ -82,7 +74,7 @@ namespace WpfRacingSimulator
                         score_.Append("\tSpeed: " + info.Speed.ToString());
                         score_.Append("\tWheel: " + info.DamageRandom.ToString());
                         score_.Append("\t" + info.AdditionalInfo);
-                        score_.Append("\tOdometer reading: " + distance_.ToString());
+                        score_.Append("\tOdometer: " + distance_.ToString());
                         score_.Append("\n");
                     }
                 }
@@ -101,7 +93,7 @@ namespace WpfRacingSimulator
         public void Finish(MainWindow mainPage)
         {
             aTimer_.Stop();
-            foreach (var vechle in vechles)
+            foreach (var vechle in vechles_)
             {
                 vechle.Shutdown();
             }
@@ -113,35 +105,95 @@ namespace WpfRacingSimulator
         }
         public void ParseConfig(String jsonString) 
         {
+            distance_ = 0;
+            vechles_.Clear();
             using (JsonDocument document = JsonDocument.Parse(jsonString))
             {
-                double sum = 0;
-                int count = 0;
-
                 JsonElement root = document.RootElement;
-                JsonElement studentsElement = root.GetProperty("Students");
-
-                count = studentsElement.GetArrayLength();
-
-                foreach (JsonElement student in studentsElement.EnumerateArray())
+                if (root.TryGetProperty("Distance", out JsonElement distanceElement))
                 {
-                    if (student.TryGetProperty("Grade", out JsonElement gradeElement))
+                    distance_ = distanceElement.GetInt32();
+                }
+                if (root.TryGetProperty("Timeout", out JsonElement timeoutElement))
+                {
+                    timeout_ = timeoutElement.GetInt32();
+                    aTimer_.Interval= timeout_;
+                }
+                
+                int count = 0;
+                int speed = 0;
+                double damageRandom = 0.0;
+                int weight = 0;
+                int passengers = 0;
+                bool isSidecar = false;
+                JsonElement vechlesElement = root.GetProperty("Vechles");
+                count = vechlesElement.GetArrayLength();
+                string ?vehicleType = "";
+                foreach (JsonElement vechle in vechlesElement.EnumerateArray())
+                {
+                    if (vechle.TryGetProperty("VehicleType", out JsonElement vehicleTypeElement))
                     {
-                        sum += gradeElement.GetDouble();
+                        vehicleType = vehicleTypeElement.GetString();
                     }
-                    else
+                    if (vechle.TryGetProperty("Speed", out JsonElement speedElement))
                     {
-                        sum += 70;
+                        speed = speedElement.GetInt32();
+                    }
+                    if (vechle.TryGetProperty("DamageRandom", out JsonElement damageRandomElement))
+                    {
+                        damageRandom = damageRandomElement.GetDouble();
+                    }
+                    if (!string.IsNullOrEmpty(vehicleType) && vehicleType.Equals("Truck"))
+                    {
+                        if (vechle.TryGetProperty("Weight", out JsonElement weightElement))
+                        {
+                            weight = weightElement.GetInt32();
+                            vechles_.Add(new Truck() 
+                            { 
+                                VehicleType = "Truck", 
+                                Speed = speed, 
+                                DamageRandom = damageRandom,
+                                Weight = weight
+                            });
+                        }
+                    }
+                    if (!string.IsNullOrEmpty(vehicleType) && vehicleType.Equals("Car"))
+                    {
+                        if (vechle.TryGetProperty("Passengers", out JsonElement passengersElement))
+                        {
+                            weight = passengersElement.GetInt32();
+                            vechles_.Add(new Car()
+                            {
+                                VehicleType = "Car",
+                                Speed = speed,
+                                DamageRandom = damageRandom,
+                                Passengers = passengers
+                            });
+                        }
+                    }
+                    if (!string.IsNullOrEmpty(vehicleType) && vehicleType.Equals("Moto"))
+                    {
+                        if (vechle.TryGetProperty("IsSidecar", out JsonElement isSidecarElement))
+                        {
+                            isSidecar = isSidecarElement.GetBoolean();
+                            vechles_.Add(new Moto()
+                            {
+                                VehicleType = "Moto",
+                                Speed = speed,
+                                DamageRandom = damageRandom,
+                                IsSidecar = isSidecar
+                            });
+                        }
                     }
                 }
             }
             StringBuilder sb = new StringBuilder("");
-            foreach (var vechle in vechles)
+            foreach (var vechle in vechles_)
             {
                 VechleInfo info = vechle.GetInfo();
                 sb.Append(info.VehicleType);
                 sb.Append("\tSpeed: " + info.Speed.ToString());
-                sb.Append("\tWheel punct: " + info.DamageRandom.ToString());
+                sb.Append("\tWheel: " + info.DamageRandom.ToString());
                 sb.Append("\t" + info.AdditionalInfo);
                 sb.Append("\n");
             }

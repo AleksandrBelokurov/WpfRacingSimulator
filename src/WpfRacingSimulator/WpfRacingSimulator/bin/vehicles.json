@@ -1,30 +1,42 @@
 {
-  "Race": {
-  "Distace": "300"
-  },
-  "Class Name": "Science",
-  "Teacher\u0027s Name": "Jane",
-  "Semester": "2019-01-01",
-  "Students": [
+  "Distance": 2000,
+  "Timeout": 100,
+  "Vechles": [
     {
-      "Name": "John",
-      "Grade": 94.3
+      "VehicleType": "Truck", 
+      "Speed": 50, 
+      "DamageRandom": 0.1, 
+      "Weight": 1000 
+    },
+    { 
+      "VehicleType": "Moto", 
+      "Speed": 110, 
+      "DamageRandom": 0.03,
+      "IsSidecar": true 
+    },
+    { 
+      "VehicleType": "Car", 
+      "Speed": 90, 
+      "DamageRandom": 0.05,
+      "Passengers": 2 
     },
     {
-      "Name": "James",
-      "Grade": 81.0
+      "VehicleType": "Moto",
+      "Speed": 120, 
+      "DamageRandom": 0.03, 
+      "IsSidecar": false
     },
     {
-      "Name": "Julia",
-      "Grade": 91.9
+      "VehicleType": "Car",
+      "Speed": 90,
+      "DamageRandom": 0.05,
+      "Passengers": 1 
     },
     {
-      "Name": "Jessica",
-      "Grade": 72.4
-    },
-    {
-      "Name": "Johnathan"
+      "VehicleType": "Truck", 
+      "Speed": 40, 
+      "DamageRandom": 0.1, 
+      "Weight": 2500 
     }
-  ],
-  "Final": true
+  ]
 }

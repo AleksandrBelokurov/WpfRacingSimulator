@@ -141,9 +141,16 @@ namespace WpfRacingSimulator
                 var fileStream = openFileDialog_.OpenFile();
                 using (StreamReader reader = new StreamReader(fileStream))
                 {
-                    btn_Start.IsEnabled = true;
                     fileContent = reader.ReadToEnd();
-                    race_.ParseConfig(fileContent.ToString());
+                    try 
+                    {
+                        race_.ParseConfig(fileContent.ToString());
+                        btn_Start.IsEnabled = true;
+                    }
+                    catch 
+                    {
+                        lbl_Config.Text = "Config file " + openFileDialog_.SafeFileName + " is not valid";
+                    }
                 }
             }
         }
