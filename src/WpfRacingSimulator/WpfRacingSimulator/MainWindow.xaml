@@ -5,35 +5,37 @@
         xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
         xmlns:local="clr-namespace:WpfRacingSimulator"
         mc:Ignorable="d"
-        Title="MainWindow" Height="320" Width="800" MinHeight="128" MinWidth="256">
-    <ScrollViewer VerticalScrollBarVisibility="Auto" HorizontalScrollBarVisibility="Auto">
-        <Grid Margin="5" x:Name="gd_Main">
+        Title="MainWindow" Height="400" Width="800" MinHeight="256" MinWidth="400">
+    <Grid Margin="5" x:Name="gd_Main">
+        <Grid.RowDefinitions>
+            <RowDefinition Height="35"></RowDefinition>
+            <RowDefinition Height="35"></RowDefinition>
+            <RowDefinition Height="35"></RowDefinition>
+            <RowDefinition Height="*"></RowDefinition>
+            <RowDefinition Height="35"></RowDefinition>
+        </Grid.RowDefinitions>
+        <Grid>
             <Grid.ColumnDefinitions>
-                <ColumnDefinition Width="110"/>
-                <ColumnDefinition Width="110"/>
+                <ColumnDefinition Width="128"/>
                 <ColumnDefinition Width="*"/>
             </Grid.ColumnDefinitions>
-            <Grid.RowDefinitions>
-                <RowDefinition Height="35"></RowDefinition>
-                <RowDefinition Height="35"></RowDefinition>
-                <RowDefinition Height="*"></RowDefinition>
-                <RowDefinition Height="35"></RowDefinition>
-            </Grid.RowDefinitions>
-            <Grid Height="35" Grid.Column="0" Grid.Row="0" Grid.ColumnSpan="2">
-                <Button x:Name="btn_OpenConfig" Click="btn_OpenConfigFile_Click" Width="96" Height="20" VerticalAlignment="Center">Open Config</Button>
-            </Grid>
-            <Grid Height="35" Grid.Column="0" Grid.Row="1" Grid.ColumnSpan="3">
-                <Button x:Name="btn_Start" Click="btn_StartLengthyTask_Click" Width="64" Height="20" VerticalAlignment="Center">Start</Button>
-            </Grid>
-            
-            <Grid Height="35" Grid.Column="0" Grid.Row="3" Grid.ColumnSpan="3">
-                <ScrollViewer VerticalScrollBarVisibility="Auto" HorizontalScrollBarVisibility="Auto">
-                    <TextBlock x:Name="lbl_InfoTable" HorizontalAlignment="Center" VerticalAlignment="Center">Result</TextBlock>
-                </ScrollViewer>
-            </Grid>
-            <TextBlock Grid.Column="0" Grid.Row="3" x:Name="lbl_Status" HorizontalAlignment="Center" VerticalAlignment="Center">Status...</TextBlock>
-            <TextBlock Grid.Column="1" Grid.Row="3" x:Name="lbl_Timer" HorizontalAlignment="Center" VerticalAlignment="Center">0</TextBlock>
-            <ProgressBar Grid.Column="2" Grid.Row="4" x:Name="pb_TotalProgress" Margin="10,10"  Value="0" ></ProgressBar>
+            <Button Grid.Column="0" Grid.Row="0" x:Name="btn_OpenConfig" Click="btn_OpenConfigFile_Click" Width="96" Height="25" VerticalAlignment="Center">Open Config</Button>
+            <TextBlock Grid.Column="3" Grid.Row="0" x:Name="lbl_Config" HorizontalAlignment="Left" VerticalAlignment="Center">To start the race press "Open Config"</TextBlock>
         </Grid>
-    </ScrollViewer>
+        <Button Grid.Column="0" Grid.Row="1" x:Name="btn_Start" Click="btn_Start_Click" Width="64" Height="25" VerticalAlignment="Center">Start</Button>
+        <TextBlock Grid.Row="2" x:Name="lbl_InfoString" HorizontalAlignment="Center" VerticalAlignment="Center">Info</TextBlock>
+        <ScrollViewer Grid.Row="3" VerticalScrollBarVisibility="Auto" HorizontalScrollBarVisibility="Auto" Margin="0,10,0,25" Grid.RowSpan="2">
+            <TextBlock  Margin="10" x:Name="lbl_InfoBoard" HorizontalAlignment="Left" VerticalAlignment="Top" >Result</TextBlock>
+        </ScrollViewer>
+        <Grid Grid.Row="4">
+            <Grid.ColumnDefinitions>
+                <ColumnDefinition Width="128"/>
+                <ColumnDefinition Width="64"/>
+                <ColumnDefinition Width="*"/>
+            </Grid.ColumnDefinitions>
+            <TextBlock Grid.Column="0" x:Name="lbl_Status" HorizontalAlignment="Center" VerticalAlignment="Center">Status...</TextBlock>
+            <TextBlock Grid.Column="1" x:Name="lbl_LeftToFinish" HorizontalAlignment="Center" VerticalAlignment="Center"></TextBlock>
+            <ProgressBar Grid.Column="2" x:Name="pb_TotalProgress" Margin="10,10"  Value="0"></ProgressBar>
+        </Grid>
+    </Grid>
 </Window>

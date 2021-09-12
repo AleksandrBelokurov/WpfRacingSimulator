@@ -23,86 +23,111 @@ namespace WpfRacingSimulator
     /// </summary>
     public partial class MainWindow : Window
     {
+        private Race race_;
         private OpenFileDialog openFileDialog_;
         public MainWindow()
         {
             InitializeComponent();
+            race_ = new Race(this);
             openFileDialog_ = new OpenFileDialog();
             Title = "The racing simulator";
-            Display += () => Win();
+            btn_Start.IsEnabled = false;
+
         }
 
-        public delegate void Message();
-        public event Message Display;
-
-        public const int Distance = 300;
-        public const int Scale = Distance / 100;
-
-        public String MyDisplayValue
+        public string InfoString
         {
             get
             {
-                return this.lbl_Status.Text;
+                return this.lbl_InfoString.Text;
             }
             set
             {
-                this.lbl_Status.Text = value;
+                this.Dispatcher.Invoke(() =>
+                {
+                    this.lbl_InfoString.Text = value;
+                });
             }
         }
-        public void Win()
+        public string InfoBoard
+        {
+            get
+            {
+                return this.lbl_InfoBoard.Text;
+            }
+            set
+            {
+                this.Dispatcher.Invoke(() =>
+                {
+                    this.lbl_InfoBoard.Text = value;
+                });
+            }
+        }
+        public double ProgressMaximum
+        {
+            get
+            {
+                return this.pb_TotalProgress.Maximum;
+            }
+            set
+            {
+                this.Dispatcher.Invoke(() =>
+                {
+                    this.pb_TotalProgress.Maximum = value;
+                });
+            }
+        }
+        public double ProgressValue
+        {
+            get
+            {
+                return this.pb_TotalProgress.Value;
+            }
+            set
+            {
+                this.Dispatcher.Invoke(() =>
+                {
+                    this.pb_TotalProgress.Value = value;
+                });
+            }
+        }
+        public string LeftToFinish
+        {
+            get
+            {
+                return this.lbl_LeftToFinish.Text;
+            }
+            set
+            {
+                this.Dispatcher.Invoke(() =>
+                {
+                    this.lbl_LeftToFinish.Text = value;
+                });
+            }
+        }
+        public void Finish()
         {
             this.Dispatcher.Invoke(() =>
             {
-                int i = Distance;
-                pb_TotalProgress.Value = i;
-                lbl_Timer.Text = i.ToString();
                 lbl_Status.Text = "Done";
-                //gd_Main.RowDefinitions.Add(new RowDefinition());
-                //System.Windows.Controls.TextBlock newTxtbl = new TextBlock();
-                //newTxtbl.Text = "New Text Block";
-                //gd_Main.Children.Add(newTxtbl);
-                //Grid.SetRow(newTxtbl, gd_Main.RowDefinitions.Count - 1);
-                //Grid.SetColumn(newTxtbl, 2);
                 btn_Start.IsEnabled = true;
                 btn_OpenConfig.IsEnabled = true;
             });
         }
-        private void btn_StartLengthyTask_Click(object sender, RoutedEventArgs e)
+        private void btn_Start_Click(object sender, RoutedEventArgs e)
         {
             btn_Start.IsEnabled = false;
             btn_OpenConfig.IsEnabled = false;
-            pb_TotalProgress.Value = 0;
-
-            Task.Run(() =>
-            {
-                this.Dispatcher.Invoke(() => //Use Dispather to Update UI Immediately  
-                {
-                    lbl_Status.Text = "Starting long Task...";
-                    lbl_Timer.Text = "0";
-                });
-                Thread.Sleep(1000);
-                this.Dispatcher.Invoke(() =>
-                {
-                    lbl_Status.Text = "In Progress...";
-                });
-                for (int i = 0; i < Distance; i++)
-                {
-                    Thread.Sleep(50);
-                    this.Dispatcher.Invoke(() =>
-                    {
-                        pb_TotalProgress.Value = i / Scale;
-                        lbl_Timer.Text = i.ToString();
-                    });
-                }
-                Display();
-            });
+            lbl_Status.Text = "Distance left to finish: ";
+            lbl_InfoString.Text = "The Race.";
+            race_.Start();
         }
         private void btn_OpenConfigFile_Click(object sender, RoutedEventArgs e)
         {
 
             var fileContent = string.Empty;
             var filePath = string.Empty;
-            string appPath = System.IO.Path.GetDirectoryName(System.IO.Path.GetFullPath(".."));
+            string ?appPath = System.IO.Path.GetDirectoryName(System.IO.Path.GetFullPath(".."));
             if (!String.IsNullOrEmpty(appPath))
                 openFileDialog_.InitialDirectory = appPath;
             openFileDialog_.Filter = "json files (*.json)|*.json|All files (*.*)|*.*";
@@ -111,13 +136,14 @@ namespace WpfRacingSimulator
             Nullable<bool> result = openFileDialog_.ShowDialog();
             if (result == true)
             {
-                //Get the path of specified file
                 filePath = openFileDialog_.FileName;
-                //Read the contents of the file into a stream
+                lbl_Config.Text = filePath.ToString();
                 var fileStream = openFileDialog_.OpenFile();
                 using (StreamReader reader = new StreamReader(fileStream))
                 {
+                    btn_Start.IsEnabled = true;
                     fileContent = reader.ReadToEnd();
+                    race_.ParseConfig(fileContent.ToString());
                 }
             }
         }

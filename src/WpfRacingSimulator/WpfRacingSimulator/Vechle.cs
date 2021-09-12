@@ -6,23 +6,39 @@ using System.Threading.Tasks;
 
 namespace WpfRacingSimulator
 {
-    struct Info 
+    struct VechleInfo 
     {
-        string Speed;
-        string Odometr;
-        string DamageRandom;
-        string AddInfo;
+        public string VehicleType;
+        public int Speed;
+        public double DamageRandom;
+        public int Odometr;
+        public string IsDamaged;
+        public string AdditionalInfo;
     }
     interface IVechle 
     {
         public void Startup();
         public void Shutdown();
         public void Run();
-        public Info GetInfo();
+        public VechleInfo GetInfo();
     }
     abstract class Vechle : IVechle
     {
-        int speed_;
+        private string vehicleType_ = "";
+        private int speed_;
+        private double damageRandom_;
+        private int odometr_ = 0;
+        private bool isEanbleRun_ = false;
+        private int damageCount_;
+        private int damageCountInit_ = 5;
+        public string VehicleType
+        {
+            get => vehicleType_;
+            set
+            {
+                vehicleType_ = value;
+            }
+        }
         public int Speed
         {
             get => speed_;
@@ -34,8 +50,8 @@ namespace WpfRacingSimulator
                 }
             }
         }
-        double damageRandom_;
-        public double DamageRand
+        
+        public double DamageRandom
         {
             get => damageRandom_;
             set
@@ -46,46 +62,65 @@ namespace WpfRacingSimulator
                 }
             }
         }
-        int distance_;
-        public int Distance
+        public bool isEanbleRun
         {
-            get => distance_;
-            set
-            {
-                if ((value > 0) && (value < 1000))
-                {
-                    distance_ = value;
-                }
-            }
+            get => isEanbleRun_;
+            
         }
-        int damageCount_;
-        int damageCountInit_ = 5;
         public void Startup() 
         {
-
+            odometr_ = 0;
+            isEanbleRun_ = true;
         }
         public void Shutdown() 
         {
-        
-        }
-        public Info GetInfo() 
-        {
-            return new Info();
+            isEanbleRun_ = false;
         }
         public void Run() 
         {
-            Distance -= speed_;
+            if (isEanbleRun_ && !isDamage())
+            {
+                odometr_ += speed_;
+            }
         }
-        public void Damage() 
+        public bool isDamage() 
         {
-            var rand = new Random();
+            bool result = false;
+            if (--damageCount_ > 0) 
+            {
+                result = true;
+            } 
+            else 
+            {
+                var rand = new Random();
+                if (rand.NextDouble() < damageRandom_)
+                {
+                    damageCount_ = damageCountInit_;
+                    result = true;
+                }
+            }
+            return result;
+        }
+        public virtual VechleInfo GetInfo()
+        {
+            string damage;
             if (damageCount_ > 0)
             {
-                --damageCount_;
-            } else if (rand.NextDouble() < damageRandom_)
-            {
-                damageCount_ = damageCountInit_;
+                damage = "Wheel damaged";
             }
+            else 
+            {
+                damage = "";
+            }
+                
+            return new VechleInfo()
+            {
+                VehicleType = vehicleType_,
+                DamageRandom = damageRandom_,
+                Odometr = odometr_,
+                IsDamaged = damage,
+                Speed = speed_
+            };
         }
     }
     class Truck : Vechle
@@ -102,6 +137,14 @@ namespace WpfRacingSimulator
                 }
             }
         }
+        public override VechleInfo GetInfo()
+        {
+            VechleInfo info = base.GetInfo();
+            string infoStr = "Weight: " + weight_.ToString();
+
+            info.AdditionalInfo = infoStr;
+            return info;
+        }
     }
     class Car : Vechle
     {
@@ -117,6 +160,14 @@ namespace WpfRacingSimulator
                 }
             }
         }
+        public override VechleInfo GetInfo()
+        {
+            VechleInfo info = base.GetInfo();
+            string infoStr = "Passengers: " + passengers_.ToString();
+
+            info.AdditionalInfo = infoStr;
+            return info;
+        }
     }
     class Moto : Vechle
     {
@@ -128,6 +179,20 @@ namespace WpfRacingSimulator
             {
                 isSidecar_ = value;
             }
+        }
+        public override VechleInfo GetInfo()
+        {
+            VechleInfo info = base.GetInfo();
+            string infoStr;
+            if (isSidecar_)
+            {
+                infoStr = "Sidercar preset";
+            } 
+            else {
+                infoStr = "\t";
+            }
+            info.AdditionalInfo = infoStr;
+            return info;
         }
     }
 }
