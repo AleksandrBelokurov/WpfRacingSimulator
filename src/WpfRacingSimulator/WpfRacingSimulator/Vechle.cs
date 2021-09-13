@@ -25,7 +25,7 @@ namespace WpfRacingSimulator
     abstract class Vechle : IVechle
     {
         private string vehicleType_ = "";
-        private int speed_;
+        private int speed_ = 20;
         private double damageRandom_;
         private int odometr_ = 0;
         private bool isEanbleRun_ = false;
