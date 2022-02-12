@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.ComponentModel;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
@@ -22,7 +23,7 @@ namespace WpfRacingSimulator
         public void Run();
         public VechleInfo GetInfo();
     }
-    abstract class Vechle : IVechle
+    abstract class Vechle : IVechle, INotifyPropertyChanged
     {
         private string vehicleType_ = "";
         private int speed_ = 20;
@@ -31,12 +32,16 @@ namespace WpfRacingSimulator
         private bool isEanbleRun_ = false;
         private int damageCount_;
         private int damageCountInit_ = 5;
+
+        public event PropertyChangedEventHandler? PropertyChanged;
+
         public string VehicleType
         {
             get => vehicleType_;
             set
             {
                 vehicleType_ = value;
+                OnPropertyChanged("VehicleType");
             }
         }
         public int Speed
@@ -121,6 +126,14 @@ namespace WpfRacingSimulator
                 IsDamaged = damage,
                 Speed = speed_
             };
+        }
+        protected void OnPropertyChanged(string propertyName)
+        {
+            var handler = PropertyChanged;
+            if (handler != null)
+            {
+                handler(this, new PropertyChangedEventArgs(propertyName));
+            }
         }
     }
     class Truck : Vechle

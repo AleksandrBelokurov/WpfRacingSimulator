@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.Collections.ObjectModel;
 using System.Linq;
 using System.Text;
 using System.Text.Json;
@@ -18,6 +19,8 @@ namespace WpfRacingSimulator
         List<int> odometrs_;
         private StringBuilder score_;
         private int place_;
+
+        ObservableCollection<Vechle> Vechles = new ObservableCollection<Vechle>();
         public Race(MainWindow mainPage)
         {
             mainPage_ = mainPage;
